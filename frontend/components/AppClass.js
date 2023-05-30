@@ -30,7 +30,7 @@ export default class AppClass extends React.Component {
   getXY = () => {
     // It it not necessary to have a state to track the coordinates.
     // It's enough to know what index the "B" is at, to be able to calculate them.
-    return (`${this.state.x}, ${this.state.y}`);
+    return (`(${this.state.x},${this.state.y})`);
   }
 
   getXYMessage = () => {
@@ -41,10 +41,10 @@ export default class AppClass extends React.Component {
 
   reset = () => {
     // Use this helper to reset all states to their initial values.
-    console.log(`pre state RESET: X: ${this.state.x} Y: ${this.state.y} XY: ${this.state.xy} Steps: ${this.state.steps}`)
+    // console.log(`pre state RESET: X: ${this.state.x} Y: ${this.state.y} XY: ${this.state.xy} Steps: ${this.state.steps}`)
     this.setState({ x: initX, y: initY, xy: initialIndex, steps: initialSteps, message: initialMessage, formValues: '' });
     return ({ x: initX, y: initY, xy: initialIndex, steps: initialSteps, message: initialMessage, formValues: '' })
-    console.log(`post state RESET: X: ${this.state.x} Y: ${this.state.y} XY: ${this.state.xy} Steps: ${this.state.steps}`)
+    // console.log(`post state RESET: X: ${this.state.x} Y: ${this.state.y} XY: ${this.state.xy} Steps: ${this.state.steps}`)
   }
 
   getNextIndex = (direction) => {
@@ -53,25 +53,25 @@ export default class AppClass extends React.Component {
     // this helper should return the current index unchanged.
     if (direction == 'up') {
       if (this.state.y - 1 === 0) {
-        return ({ x: this.state.x, y: this.state.y, xy: this.state.xy, steps: this.state.steps })
+        return ({ x: this.state.x, y: this.state.y, xy: this.state.xy, steps: this.state.steps, message: "test" })
       }
       return ({ x: this.state.x, y: this.state.y - 1, xy: this.state.xy - 3, steps: this.state.steps + 1 })
     }
     if (direction == 'right') {
       if (this.state.x + 1 === 4) {
-        return ({ x: this.state.x, y: this.state.y, xy: this.state.xy, steps: this.state.steps })
+        return ({ x: this.state.x, y: this.state.y, xy: this.state.xy, steps: this.state.steps, message: "You can't go right" })
       }
       return ({ x: this.state.x + 1, y: this.state.y, xy: this.state.xy + 1, steps: this.state.steps + 1 })
     }
     if (direction == 'down') {
       if (this.state.y + 1 === 4) {
-        return ({ x: this.state.x, y: this.state.y, xy: this.state.xy, steps: this.state.steps })
+        return ({ x: this.state.x, y: this.state.y, xy: this.state.xy, steps: this.state.steps, message: "You can't go down" })
       }
       return ({ x: this.state.x, y: this.state.y + 1, xy: this.state.xy + 3, steps: this.state.steps + 1 })
     }
     if (direction == 'left') {
       if (this.state.x - 1 === 0) {
-        return ({ x: this.state.x, y: this.state.y, xy: this.state.xy, steps: this.state.steps })
+        return ({ x: this.state.x, y: this.state.y, xy: this.state.xy, steps: this.state.steps, message: "You can't go left" })
       }
       return ({ x: this.state.x - 1, y: this.state.y, xy: this.state.xy - 1, steps: this.state.steps + 1 })
     }
@@ -84,7 +84,9 @@ export default class AppClass extends React.Component {
     console.log(`EVENT TARGET in move func ${evt.target.id}`);
     let nextMove = this.getNextIndex(evt.target.id);
     console.log(`nextMove -- ${JSON.stringify(nextMove)}`);
-    if (`(${nextMove.x}, ${nextMove.y})` === this.getXY()) {
+    console.log(`nextMoveX and nextMoveY: (${nextMove.x},${nextMove.y}) this.getXY: ${this.getXY()}`)
+    if (`(${nextMove.x},${nextMove.y})` === this.getXY()) {
+      console.log("In Move Conditional");
       return this.setState({
         message: `You can't go ${evt.target.id}`
       })
