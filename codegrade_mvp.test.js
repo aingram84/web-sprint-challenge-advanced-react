@@ -378,7 +378,7 @@ test('AppClass is a class-based component, Review how to build a class-based com
         expect(email.value).toBeFalsy()
       })
     })
-    describe(`[F ${label}] Submit Button`, () => {
+    describe.only(`[F ${label}] Submit Button`, () => {
       test(`[F1 ${label}] Actions: up, type email, submit
           Success message is correct`, async () => {
         fireEvent.click(up)

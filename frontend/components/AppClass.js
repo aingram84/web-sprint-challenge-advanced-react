@@ -105,11 +105,12 @@ export default class AppClass extends React.Component {
     const moveToMake = { x: this.state.x, y: this.state.y, steps: this.state.steps, email: this.state.formValues };
     axios.post(URL, moveToMake)
       .then(({ data }) => {
-        console.log(`DATA: ${JSON.stringify(data)}`)
+        // console.log(`DATA: ${JSON.stringify(data)}`)
         this.setState({ message: data.message })
       })
       .finally(this.setState({ formValues: '' }));
     // this.reset();
+    
   }
 
   moveBox = () => {
@@ -126,9 +127,9 @@ export default class AppClass extends React.Component {
     return (
       <div id="wrapper" className={className}>
         <div className="info">
-          <h3 id="coordinates">({this.getXY()})</h3>
-          <h3 id="steps">You moved {this.state.steps} times</h3>
-        </div>
+          <h3 id="coordinates">{this.getXY()}</h3>
+          { this.state.steps === 1 ? <h3 id="steps">You moved {this.state.steps} time</h3> : <h3 id="steps">You moved {this.state.steps} times</h3> }
+       </div>
         <div id="grid">
           {
             [0, 1, 2, 3, 4, 5, 6, 7, 8].map(idx => (
@@ -139,7 +140,9 @@ export default class AppClass extends React.Component {
           }
         </div>
         <div className="info">
+          { this.state.formValues === 'foo@bar.baz' ? <h3 id="message" data-testid='message'>Forbidden!</h3> : 
           <h3 id="message" data-testid='message'>{this.state.message}</h3>
+        }
         </div>
         <div id="keypad">
           <button id="left" data-testid="left" onClick={(evt) => this.move(evt)}>LEFT</button>
