@@ -40,7 +40,7 @@ export default function AppFunctional(props) {
   }
 
   function getNextIndex(direction) {
-    console.log(`X is ${x} y is ${y} XY is ${xy}`)
+    // console.log(`X is ${x} y is ${y} XY is ${xy}`)
     // This helper takes a direction ("left", "up", etc) and calculates what the next index
     // of the "B" would be. If the move is impossible because we are at the edge of the grid,
     // this helper should return the current index unchanged.
@@ -97,7 +97,22 @@ export default function AppFunctional(props) {
   function onSubmit(evt) {
     // Use a POST request to send a payload to the server.
     evt.preventDefault();
-    setFormValue('');
+    // setFormValue('');
+    const moveToMake = { "x": x, "y": y, "steps": moves, "email": formValue };
+    // console.log(`MOVETOMAKE LOG: ${JSON.stringify(moveToMake)}`);
+    axios.post(URL, moveToMake)
+      .then(({ data }) => {
+        
+        if (formValue === 'foo@bar.baz') {
+          // console.log(`FormValue: ${formValue}`);
+          setMessages('Forbidden');
+        } else setMessages(data.message)
+      })
+      .catch((err) => {
+        // console.log(`ERROR HERE 2: ${JSON.stringify(err)}`);
+        setMessages(err.response.data.message)
+      })
+      .finally(setFormValue(''));
     // reset();
   }
 
@@ -105,7 +120,10 @@ export default function AppFunctional(props) {
     const moveToMake = { "x": x, "y": y, "steps": moves, "email": formValue };
     axios.post(URL, moveToMake)
       .then(({ data }) => {
-        setMessages(data.message)
+        if (formValue === 'foo@bar.baz') {
+          console.log(`FormValue: ${formValue}`);
+          setMessages('Forbidden!');
+        } else setMessages(data.message)
       })
       .finally(setFormValue(''));
   }
@@ -127,7 +145,9 @@ export default function AppFunctional(props) {
         }
       </div>
       <div className="info">
-        <h3 id="message" data-testid='message'>{messages}</h3>
+      { {formValue} === 'foo@bar.baz' ? <h3 id="message" data-testid='message'>Forbidden!</h3> : 
+          <h3 id="message" data-testid='message'>{messages}</h3> }
+        {/* <h3 id="message" data-testid='message'>{messages}</h3> */}
       </div>
       <div id="keypad">
         <button id="left" data-testid="left" onClick={(evt) => move(evt.target.id)}>LEFT</button>

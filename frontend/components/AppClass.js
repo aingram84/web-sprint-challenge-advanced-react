@@ -81,12 +81,11 @@ export default class AppClass extends React.Component {
   move = (evt) => {
     // This event handler can use the helper above to obtain a new index for the "B",
     // and change any states accordingly.
-    console.log(`EVENT TARGET in move func ${evt.target.id}`);
+    // console.log(`EVENT TARGET in move func ${evt.target.id}`);
     let nextMove = this.getNextIndex(evt.target.id);
-    console.log(`nextMove -- ${JSON.stringify(nextMove)}`);
-    console.log(`nextMoveX and nextMoveY: (${nextMove.x},${nextMove.y}) this.getXY: ${this.getXY()}`)
+    // console.log(`nextMove -- ${JSON.stringify(nextMove)}`);
+    // console.log(`nextMoveX and nextMoveY: (${nextMove.x},${nextMove.y}) this.getXY: ${this.getXY()}`)
     if (`(${nextMove.x},${nextMove.y})` === this.getXY()) {
-      console.log("In Move Conditional");
       return this.setState({
         message: `You can't go ${evt.target.id}`
       })
@@ -105,8 +104,10 @@ export default class AppClass extends React.Component {
     const moveToMake = { x: this.state.x, y: this.state.y, steps: this.state.steps, email: this.state.formValues };
     axios.post(URL, moveToMake)
       .then(({ data }) => {
-        // console.log(`DATA: ${JSON.stringify(data)}`)
         this.setState({ message: data.message })
+      })
+      .catch((err) => {
+        this.setState({ message: err.response.data.message })
       })
       .finally(this.setState({ formValues: '' }));
     // this.reset();
@@ -118,6 +119,10 @@ export default class AppClass extends React.Component {
     axios.post(URL, moveToMake)
       .then(({ data }) => {
         this.setState({ message: data.message })
+      })
+      .catch((err) => {
+        // console.log(`ERROR HERE 2: ${JSON.stringify(err)}`);
+        this.setState({ message: err.response.data.message })
       })
       .finally(this.setState({ formValues: '' }));
   }
@@ -140,7 +145,7 @@ export default class AppClass extends React.Component {
           }
         </div>
         <div className="info">
-          { this.state.formValues === 'foo@bar.baz' ? <h3 id="message" data-testid='message'>Forbidden!</h3> : 
+          { this.state.formValues === 'foo@bar.baz' ? <h3 id="message" data-testid='message'>{this.state.message}</h3> : 
           <h3 id="message" data-testid='message'>{this.state.message}</h3>
         }
         </div>
